@@ -142,3 +142,6 @@ cython_debug/
 
 # Data files
 data/ 
+
+# Output files
+out/
