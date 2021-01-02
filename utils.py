@@ -3,6 +3,19 @@ from string import punctuation
 import os
 
 
+stopwords = []
+
+
+def get_file_path(file_name: str):
+    return os.path.join(os.path.dirname(__file__), file_name)
+
+
+# Read stopwords list from file
+with open(get_file_path("data/stopwords.txt")) as f:
+    stopwords = f.read().splitlines()
+    f.close()
+
+
 def punct_removal(stringval):
     total_string = ""
     for var in stringval:
@@ -76,8 +89,9 @@ def create_total_word_list(query_dict, doc_dict):
     return total_word_list
 
 
-def get_file_path(file_name: str):
-    return os.path.join(os.path.dirname(__file__), file_name)
+def is_stopword(token: str):
+    return token in stopwords
+
 
 def remove_punctuation(string: str):
     '''
