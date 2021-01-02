@@ -1,6 +1,7 @@
 import string
 from string import punctuation
 import os
+import pickle
 
 
 stopwords = []
@@ -41,3 +42,14 @@ def normalize_token(token: str):
         and transforming to lowercase
     '''
     return token.strip().lower()
+
+
+def pickle_object(object, location):
+    with open(get_file_path(location), 'wb') as file:
+        pickle.dump(object, file, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def unpickle_object(location):
+    with open(get_file_path(location), 'rb') as file:
+        obj = pickle.load(file)
+    return obj
