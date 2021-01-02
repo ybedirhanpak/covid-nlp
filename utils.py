@@ -1,4 +1,5 @@
 import string
+from string import punctuation
 
 
 def punct_removal(stringval):
@@ -23,7 +24,6 @@ def stopword_removal(splitted_doc):
 
     f.close()
     return splitted_doc
-
 
 
 def empty_removal(splitted_doc):
@@ -73,3 +73,23 @@ def create_total_word_list(query_dict, doc_dict):
                 total_word_list.append(word)
 
     return total_word_list
+
+
+def remove_punctuation(string: str):
+    '''
+        Replaces punctuation characters with space character
+    '''
+    # NOTE FOR FUTURE ENHANCEMENTS:
+    # We can use more effective punctuation removal mechanism.
+    # We can make adjactives separated and word-number pairs to be concatenated.
+    # For example 'non-immunocompromised' -> 'non immunocompromised'; 'covid-19' -> 'covid19'
+    # We should also treat decimal numbers differently. Right now '(82.5%)' becomes 825 but it should be still '82.5' or '82.5%'
+    return string.translate(str.maketrans(punctuation, ' ' * len(punctuation)))
+
+
+def normalize_token(token: str):
+    '''
+        Normalizes given token by removing trailing spaces 
+        and transforming to lowercase
+    '''
+    return token.strip().lower()
