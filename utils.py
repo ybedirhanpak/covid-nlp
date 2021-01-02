@@ -90,7 +90,10 @@ def create_total_word_list(query_dict, doc_dict):
 
 
 def is_stopword(token: str):
-    return token in stopwords
+    '''
+        Returns True if token is stopword or empty string
+    '''
+    return token in stopwords or token == ''
 
 
 def remove_punctuation(string: str):
