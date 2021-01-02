@@ -1,5 +1,6 @@
 import string
 from string import punctuation
+import os
 
 
 def punct_removal(stringval):
@@ -74,6 +75,9 @@ def create_total_word_list(query_dict, doc_dict):
 
     return total_word_list
 
+
+def get_file_path(file_name: str):
+    return os.path.join(os.path.dirname(__file__), file_name)
 
 def remove_punctuation(string: str):
     '''
