@@ -29,7 +29,7 @@ def read_metadata(vocabulary: set):
             doc_abstract = row[8]
 
             # Remove punctuation of the document
-            doc_content = utils.remove_punctuation(
+            doc_content = utils.normalize_doc(
                 doc_title + ' ' + doc_abstract)
 
             # Term frequency in this document

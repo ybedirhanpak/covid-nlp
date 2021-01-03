@@ -18,8 +18,8 @@ def read_query(vocabulary: set):
         topic_number = topic.get("number")
 
         # Concatenate query, question and narrative and remove punctuation
-        topic_content = utils.remove_punctuation(
-            ' '.join([topic[i].text for i in range(3)]))
+        topic_content = utils.normalize_doc(
+            ' '.join([topic[i].text for i in range(1)]))
 
         # Term frequency in this topic
         topic_tf = {}

@@ -2,7 +2,9 @@ import string
 from string import punctuation
 import os
 import pickle
+import re
 
+ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789"
 
 stopwords = []
 
@@ -24,7 +26,7 @@ def is_stopword(token: str):
     return token in stopwords or token == ''
 
 
-def remove_punctuation(string: str):
+def normalize_doc(doc: str):
     '''
         Replaces punctuation characters with space character
     '''
@@ -33,15 +35,14 @@ def remove_punctuation(string: str):
     # We can make adjactives separated and word-number pairs to be concatenated.
     # For example 'non-immunocompromised' -> 'non immunocompromised'; 'covid-19' -> 'covid19'
     # We should also treat decimal numbers differently. Right now '(82.5%)' becomes 825 but it should be still '82.5' or '82.5%'
-    return string.translate(str.maketrans(punctuation, ' ' * len(punctuation)))
+    return re.sub(f'[^{ALPHABET}]', ' ', doc.lower()).strip()
 
 
 def normalize_token(token: str):
     '''
         Normalizes given token by removing trailing spaces 
-        and transforming to lowercase
     '''
-    return token.strip().lower()
+    return token.strip()
 
 
 def pickle_object(object, location):
