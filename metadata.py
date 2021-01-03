@@ -12,11 +12,11 @@ def read_metadata():
     start_time = time.time()
 
     inverted_index = {}
-    normalized_documents = []
-    document_ids = []
+    normalized_documents_unsorted = []
+    document_ids_unsorted = []
 
-    with open(utils.get_file_path("data/metadata.csv"), 'r') as readFile:
-        csv_reader = csv.reader(readFile, delimiter=',')
+    with open(utils.get_file_path("data/metadata.csv"), 'r') as file:
+        csv_reader = csv.reader(file, delimiter=',')
 
         # Skip first line which contains headers
         next(csv_reader)
@@ -49,10 +49,16 @@ def read_metadata():
                 elif doc_id not in inverted_index[n_token]:
                     inverted_index[n_token].add(doc_id)
 
-            normalized_documents.append(' '.join(normalized_doc))
-            document_ids.append(doc_id)
+            normalized_documents_unsorted.append(' '.join(normalized_doc))
+            document_ids_unsorted.append(doc_id)
 
-    readFile.close()
+    file.close()
+
+    # Sort normalized_documents_unsorted and document_ids_unsorted lists
+    id_document_pairs = sorted(
+        zip(document_ids_unsorted, normalized_documents_unsorted))
+
+    document_ids, normalized_documents = zip(*id_document_pairs)
 
     print("Pickle inverted_index, normalized_documents")
 
