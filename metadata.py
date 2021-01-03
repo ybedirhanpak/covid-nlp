@@ -16,6 +16,7 @@ def read_metadata(vocabulary: set):
     term_frequency_doc = {}
     inverted_index = {}
     document_frequency = {}
+    normalized_documents = []
 
     with open(utils.get_file_path("data/metadata.csv"), 'r') as readFile:
         csv_reader = csv.reader(readFile, delimiter=',')
@@ -35,6 +36,8 @@ def read_metadata(vocabulary: set):
             # Term frequency in this document
             doc_term_frequency = {}
 
+            normalized_doc = []
+
             # Preprocess each token in the document
             for token in doc_content.split(" "):
                 # Normalize the token
@@ -43,6 +46,8 @@ def read_metadata(vocabulary: set):
                 # Skip stopwords
                 if utils.is_stopword(n_token):
                     continue
+
+                normalized_doc.append(token)
 
                 # Add token to term frequency
                 if n_token not in doc_term_frequency:
@@ -65,10 +70,11 @@ def read_metadata(vocabulary: set):
                 vocabulary.add(n_token)
 
             term_frequency_doc[doc_id] = doc_term_frequency
+            normalized_documents.append(' '.join(normalized_doc))
 
     readFile.close()
 
-    print("Pickle term_frequency_doc, document_frequency, inverted_index")
+    print("Pickle term_frequency_doc, document_frequency, inverted_index, normalized_documents")
 
     # Create out directory
     if not os.path.exists("out"):
@@ -85,6 +91,10 @@ def read_metadata(vocabulary: set):
     # Picke document_frequency
     with open(utils.get_file_path("out/document_frequency.pickle"), 'wb') as file:
         pickle.dump(document_frequency, file, protocol=pickle.HIGHEST_PROTOCOL)
+
+    # Picke normalized_documents
+    with open(utils.get_file_path("out/normalized_documents.pickle"), 'wb') as file:
+        pickle.dump(normalized_documents, file, protocol=pickle.HIGHEST_PROTOCOL)
 
     end_time = time.time()
 

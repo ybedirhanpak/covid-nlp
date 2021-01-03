@@ -13,16 +13,19 @@ def read_query(vocabulary: set):
     root = tree.getroot()
 
     term_frequency_query = {}
+    normalized_queries = []
 
     for topic in root:
         topic_number = topic.get("number")
 
         # Concatenate query, question and narrative and remove punctuation
         topic_content = utils.normalize_doc(
-            ' '.join([topic[i].text for i in range(1)]))
+            ' '.join([topic[i].text for i in range(3)]))
 
         # Term frequency in this topic
         topic_tf = {}
+
+        normalized_query = []
 
         # Preprocess each token in the document
         for token in topic_content.split(" "):
@@ -32,6 +35,8 @@ def read_query(vocabulary: set):
             # Skip stopwords
             if utils.is_stopword(n_token):
                 continue
+
+            normalized_query.append(n_token)
 
             # Add token to document dictionary
             if n_token not in topic_tf:
@@ -43,6 +48,7 @@ def read_query(vocabulary: set):
             vocabulary.add(n_token)
 
         term_frequency_query[topic_number] = topic_tf
+        normalized_queries.append(' '.join(normalized_query))
 
     print("Pickle term_frequency_query")
 
@@ -53,6 +59,11 @@ def read_query(vocabulary: set):
     # Pickle term_frequency_query
     with open(utils.get_file_path("out/term_frequency_query.pickle"), 'wb') as file:
         pickle.dump(term_frequency_query, file,
+                    protocol=pickle.HIGHEST_PROTOCOL)
+
+    # Pickle normalized_queries
+    with open(utils.get_file_path("out/normalized_queries.pickle"), 'wb') as file:
+        pickle.dump(normalized_queries, file,
                     protocol=pickle.HIGHEST_PROTOCOL)
 
     end_time = time.time()
