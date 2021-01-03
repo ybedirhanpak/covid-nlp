@@ -1,19 +1,18 @@
 import xml.etree.ElementTree as ET
 import utils
 import os
-import pickle
 import time
 
 
-def read_query(vocabulary: set):
+def read_query():
     print("Preprocessing metadata.csv...")
     start_time = time.time()
 
     tree = ET.parse(utils.get_file_path("./data/topics-rnd5.xml"))
     root = tree.getroot()
 
-    term_frequency_query = {}
     normalized_queries = []
+    query_ids = []
 
     for topic in root:
         topic_number = topic.get("number")
@@ -44,27 +43,20 @@ def read_query(vocabulary: set):
             else:
                 topic_tf[n_token] += 1
 
-            # Add token to vocabulary
-            vocabulary.add(n_token)
-
-        term_frequency_query[topic_number] = topic_tf
         normalized_queries.append(' '.join(normalized_query))
+        query_ids.append(topic_number)
 
-    print("Pickle term_frequency_query")
+    print("Pickle normalized_queries...")
 
     # Create out directory
     if not os.path.exists("out"):
         os.makedirs("out")
 
-    # Pickle term_frequency_query
-    with open(utils.get_file_path("out/term_frequency_query.pickle"), 'wb') as file:
-        pickle.dump(term_frequency_query, file,
-                    protocol=pickle.HIGHEST_PROTOCOL)
-
     # Pickle normalized_queries
-    with open(utils.get_file_path("out/normalized_queries.pickle"), 'wb') as file:
-        pickle.dump(normalized_queries, file,
-                    protocol=pickle.HIGHEST_PROTOCOL)
+    utils.pickle_object(normalized_queries, "out/normalized_queries.pickle")
+
+    # Pickle query_ids
+    utils.pickle_object(query_ids, "out/query_ids.pickle")
 
     end_time = time.time()
 

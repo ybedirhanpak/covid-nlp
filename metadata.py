@@ -1,20 +1,19 @@
 import csv
-import pickle
 import utils
 import os
 import time
 
 
-def read_metadata(vocabulary: set):
+def read_metadata():
     '''
         Preprocesses metadata, creates inverted index and term frequency.
-        Updates vocabulary.
     '''
     print("Preprocessing metadata.csv...")
     start_time = time.time()
 
     inverted_index = {}
     normalized_documents = []
+    document_ids = []
 
     with open(utils.get_file_path("data/metadata.csv"), 'r') as readFile:
         csv_reader = csv.reader(readFile, delimiter=',')
@@ -50,10 +49,8 @@ def read_metadata(vocabulary: set):
                 elif doc_id not in inverted_index[n_token]:
                     inverted_index[n_token].add(doc_id)
 
-                # Add token to vocabulary
-                vocabulary.add(n_token)
-
             normalized_documents.append(' '.join(normalized_doc))
+            document_ids.append(doc_id)
 
     readFile.close()
 
@@ -64,13 +61,14 @@ def read_metadata(vocabulary: set):
         os.makedirs("out")
 
     # Picke inverted_index
-    with open(utils.get_file_path("out/inverted_index.pickle"), 'wb') as file:
-        pickle.dump(inverted_index, file, protocol=pickle.HIGHEST_PROTOCOL)
+    utils.pickle_object(inverted_index, "out/inverted_index.pickle")
 
     # Picke normalized_documents
-    with open(utils.get_file_path("out/normalized_documents.pickle"), 'wb') as file:
-        pickle.dump(normalized_documents, file,
-                    protocol=pickle.HIGHEST_PROTOCOL)
+    utils.pickle_object(normalized_documents,
+                        "out/normalized_documents.pickle")
+
+    # Picke document_ids
+    utils.pickle_object(document_ids, "out/document_ids.pickle")
 
     end_time = time.time()
 
